@@ -1,0 +1,1371 @@
+/* ============================================================
+   UX Portfolio — style.css
+   Layer order: reset → tokens → base → layout → components
+   ============================================================ */
+
+
+/* 1. Reset
+   ---------------------------------------------------------- */
+
+   *,
+   *::before,
+   *::after {
+     box-sizing: border-box;
+     margin: 0;
+     padding: 0;
+   }
+   
+   html {
+     scroll-behavior: smooth;
+     -webkit-text-size-adjust: 100%;
+   }
+   
+   img,
+   picture,
+   video,
+   canvas,
+   svg {
+     display: block;
+     max-width: 100%;
+   }
+   
+   input,
+   button,
+   textarea,
+   select {
+     font: inherit;
+   }
+   
+   
+   /* 2. Design Tokens (Phase 9: Brutalist 2026 Aesthetic)
+      ---------------------------------------------------------- */
+   
+   :root {
+     /* — High-Contrast Monochromatic Palette (Light Mode) — */
+     --color-primary:        #FF4500;  /* Blinding Neon Orange */
+     --color-primary-hover:  #CC3700;
+     --color-on-primary:     #FFFFFF;  
+     --color-secondary:      #0F0F0F;
+     --color-bg:             #EAEAEA;  /* Cool, stark light gray */
+     --color-surface:        #FFFFFF;
+     --color-text:           #050505;  /* Deepest black for max contrast */
+     --color-text-muted:     #666666;
+     --color-border:         #CCCCCC;
+
+     --color-bg:             #EAEAEA;  
+     --color-surface:        #FFFFFF;
+     --color-surface-glass:  rgba(255, 255, 255, 0.75); /* NEW: Light Mode Glass */
+     --color-text:           #050505;
+   
+     /* — Typography Overhaul — */
+     --font-display: 'Space Grotesk', system-ui, sans-serif;
+     --font-body:    'Inter', system-ui, sans-serif;
+   
+     /* — Extreme Fluid Type Scale (CSS clamp for viewport scaling) — */
+     --text-xs:    0.75rem;
+     --text-sm:    0.875rem;
+     --text-base:  1rem;
+     --text-md:    1.25rem;
+     --text-lg:    1.5rem;
+     --text-xl:    clamp(2rem, 4vw, 3rem);
+     --text-2xl:   clamp(3rem, 6vw, 4.5rem);
+     --text-3xl:   clamp(4rem, 8vw, 7rem); /* Massive, structural heading size */
+   
+     /* — Typography metrics — */
+     --leading-tight:    0.95; /* Super tight line-height for display fonts */
+     --leading-normal:   1.5;
+     --leading-relaxed:  1.6;
+     --measure:          60ch;
+   
+     /* — Spacing (4px base) — */
+     --space-1:   0.25rem;
+     --space-2:   0.5rem;
+     --space-3:   0.75rem;
+     --space-4:   1rem;
+     --space-6:   1.5rem;
+     --space-8:   2rem;
+     --space-12:  3rem;
+     --space-16:  4rem;
+     --space-24:  6rem;
+   
+     /* — Layout — */
+     --max-width:  1400px; /* Widened for edge-to-edge feel */
+     --nav-height: 5rem;   
+   
+     /* — Shadows — */
+     --shadow-sm: 0 4px 20px rgba(0,0,0,.05);
+     --shadow-md: 0 10px 40px rgba(0,0,0,.15); /* Harsher shadows for depth */
+   
+     /* — Animation — */
+     --duration-fast:   150ms;
+     --duration-base:   300ms;
+     --duration-slow:   600ms;
+     --ease-out:        cubic-bezier(0.16, 1, 0.3, 1); /* Snappier, premium ease */
+     --ease-in-out:     cubic-bezier(0.65, 0, 0.35, 1);
+   }
+   
+   /* Dark theme — Stark Charcoal & Neon
+      ---------------------------------------------------------- */
+   [data-theme="dark"] {
+     --color-primary:        #FF571A; /* Slightly brightened for optical balance */
+     --color-primary-hover:  #FF7340;
+     --color-bg:             #0A0A0A; /* Near true black */
+     --color-surface:        #141414;
+     --color-text:           #F5F5F5;
+     --color-text-muted:     #888888;
+     --color-border:         #2A2A2A;
+
+     --color-bg:             #0A0A0A; 
+     --color-surface:        #141414;
+     --color-surface-glass:  rgba(20, 20, 20, 0.75); /* NEW: Dark Mode Glass */
+     --color-text:           #F5F5F5;
+   }
+   
+   
+   /* 3. Base Styles
+      ---------------------------------------------------------- */
+   
+   body {
+     font-family:             var(--font-body);
+     font-size:               var(--text-base);
+     line-height:             var(--leading-normal);
+     color:                   var(--color-text);
+     background-color:        var(--color-bg);
+     -webkit-font-smoothing:  antialiased;
+     -moz-osx-font-smoothing: grayscale;
+     transition:
+       background-color var(--duration-base) var(--ease-in-out),
+       color            var(--duration-base) var(--ease-in-out);
+   }
+   
+   main {
+     padding-top: var(--nav-height);
+   }
+   
+   .container {
+     max-width: var(--max-width);
+     margin: 0 auto;
+     padding: 0 var(--space-6);
+   }
+   
+   :focus-visible {
+     outline: 2px solid var(--color-primary);
+     outline-offset: 3px;
+     border-radius: 3px;
+   }
+   
+   :focus:not(:focus-visible) {
+     outline: none;
+   }
+   
+   body.menu-is-open {
+     overflow: hidden;
+   }
+   
+   
+   /* 4. Skip Link
+      ---------------------------------------------------------- */
+   
+   .skip-link {
+     position: absolute;
+     top: -100%;
+     left: var(--space-4);
+     z-index: 200;
+     padding: var(--space-2) var(--space-4);
+     background: var(--color-primary);
+     color: #fff;
+     font-size: var(--text-sm);
+     font-weight: 500;
+     text-decoration: none;
+     border-radius: 0 0 4px 4px;
+     transition: top var(--duration-fast) var(--ease-out);
+   }
+   
+   .skip-link:focus {
+     top: 0;
+   }
+   
+   
+   /* 5. Site Header
+      ---------------------------------------------------------- */
+   
+      .site-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: var(--nav-height);
+        
+        /* — The Glassmorphism Magic — */
+        background-color: var(--color-surface-glass);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px); /* Required for Safari */
+        
+        border-bottom: 1px solid transparent;
+        transition:
+          background-color var(--duration-base) var(--ease-in-out),
+          border-color var(--duration-fast) var(--ease-out),
+          box-shadow var(--duration-fast) var(--ease-out);
+      }
+      
+      .site-header.is-scrolled {
+        border-bottom: 0px solid var(--color-border);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05); /* Softer shadow for glass */
+      }
+   
+   
+   /* 6. Nav Container
+      ---------------------------------------------------------- */
+   
+   .nav-container {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: var(--space-4);
+     height: 100%;
+     max-width: var(--max-width);
+     margin: 0 auto;
+     padding: 0 var(--space-6);
+   }
+   
+   .nav-logo {
+     font-family: var(--font-display);
+     font-size: var(--text-md);
+     color: var(--color-text);
+     text-decoration: none;
+     letter-spacing: -0.01em;
+     flex-shrink: 0;
+     transition: color var(--duration-fast) var(--ease-out);
+   }
+   
+   .nav-logo:hover {
+     color: var(--color-primary);
+   }
+   
+   .nav-links {
+     display: flex;
+     align-items: center;
+     gap: var(--space-8);
+     list-style: none;
+   }
+   
+   .nav-links a {
+    position: relative;
+    font-family: var(--font-body); /* Force consistency with the button */
+    font-size: var(--text-base);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    padding-bottom: 2px;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+   
+   .nav-links a::after {
+     content: '';
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     width: 100%;
+     height: 2px;
+     background: var(--color-primary);
+     border-radius: 1px;
+     transform: scaleX(0);
+     transform-origin: left;
+     transition: transform var(--duration-base) var(--ease-out);
+   }
+   
+   .nav-links a:hover,
+   .nav-links a.is-active {
+     color: var(--color-text);
+   }
+   
+   .nav-links a:hover::after,
+   .nav-links a.is-active::after {
+     transform: scaleX(1);
+   }
+   
+   .nav-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-shrink: 0;
+    position: relative; /* NEW: Establishes context */
+    z-index: 110;       /* NEW: Forces buttons above the mobile overlay */
+  }
+   
+   .theme-toggle {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     width: 2.25rem;
+     height: 2.25rem;
+     border: none;
+     border-radius: 50%;
+     background: transparent;
+     color: var(--color-text);
+     cursor: pointer;
+     transition: background-color var(--duration-fast) var(--ease-out);
+   }
+   
+   .theme-toggle:hover {
+     background: var(--color-border);
+   }
+   
+   .theme-toggle .icon {
+     width: 1.25rem;
+     height: 1.25rem;
+     stroke: currentColor;
+     flex-shrink: 0;
+   }
+   
+   .icon-sun                { display: none;  }
+   [data-theme="dark"] .icon-sun  { display: block; }
+   [data-theme="dark"] .icon-moon { display: none;  }
+   
+   .menu-toggle {
+     display: none;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     gap: 5px;
+     width: 2.25rem;
+     height: 2.25rem;
+     padding: var(--space-2);
+     border: none;
+     border-radius: 4px;
+     background: transparent;
+     cursor: pointer;
+     transition: background-color var(--duration-fast) var(--ease-out);
+   }
+   
+   .menu-toggle:hover {
+     background: var(--color-border);
+   }
+   
+   .hamburger-bar {
+     display: block;
+     width: 20px;
+     height: 2px;
+     background: var(--color-text);
+     border-radius: 1px;
+     transition:
+       transform var(--duration-base) var(--ease-in-out),
+       opacity   var(--duration-base) var(--ease-in-out);
+   }
+   
+   .menu-toggle[aria-expanded="true"] .hamburger-bar:nth-child(1) {
+     transform: translateY(7px) rotate(45deg);
+   }
+   .menu-toggle[aria-expanded="true"] .hamburger-bar:nth-child(2) {
+     opacity: 0;
+     transform: scaleX(0);
+   }
+   .menu-toggle[aria-expanded="true"] .hamburger-bar:nth-child(3) {
+     transform: translateY(-7px) rotate(-45deg);
+   }
+
+
+   /* — Dropdown Component (Desktop Hover) — */
+   
+  /* — Dropdown Component (Click-Based Editorial Style) — */
+   
+  .dropdown {
+    position: relative;
+  }
+  
+  .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+    
+    /* FIX: Changed from --text-sm to --text-base to match the nav links exactly */
+    font-size: var(--text-base); 
+    
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    padding: 0 0 2px 0;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .dropdown-toggle svg {
+    transition: transform var(--duration-fast) var(--ease-out);
+  }
+  
+  .dropdown-toggle:hover,
+  .dropdown.is-expanded .dropdown-toggle {
+    color: var(--color-text);
+  }
+
+  /* The Editorial Command Center Menu */
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + var(--space-6));
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    min-width: 320px; /* Wider, more magazine-like */
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-text); /* Harsh border */
+    box-shadow: 12px 12px 0 var(--color-text); /* Monochromatic, heavy shadow */
+    list-style: none;
+    padding: var(--space-4);
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--duration-fast) var(--ease-out);
+    z-index: 101;
+  }
+  
+  /* Triggered ONLY by JavaScript class */
+  .dropdown.is-expanded .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+  
+  .dropdown.is-expanded .dropdown-toggle svg {
+    transform: rotate(180deg);
+  }
+  
+  /* Massive, Index-Style Typography */
+  .dropdown-menu a {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-3) 0;
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-border);
+    transition: color var(--duration-fast), padding-left var(--duration-fast);
+  }
+  
+  .dropdown-menu a:hover {
+    color: var(--color-primary);
+    padding-left: var(--space-2); /* Indents slightly on hover for physical feel */
+    border-bottom-color: var(--color-primary);
+  }
+  
+  .dropdown-menu a::after { display: none; } 
+  
+  .dropdown-menu .view-all {
+    border-bottom: none;
+    color: var(--color-primary);
+    margin-top: var(--space-2);
+  }
+
+  /* — Mobile Accordion Overrides — */
+  @media (max-width: 767px) {
+    .dropdown {
+      width: 100%;
+      align-items: center;
+    }
+    .dropdown-toggle {
+      font-size: var(--text-xl);
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      color: var(--color-text);
+      justify-content: center;
+    }
+    .dropdown-menu {
+      position: static;
+      box-shadow: none;
+      border: none;
+      border-left: 2px solid var(--color-primary);
+      background: transparent;
+      margin-top: var(--space-4);
+      padding: 0 0 0 var(--space-4);
+      min-width: 100%;
+      transform: none;
+      display: none; /* Uses display:none for true accordion height collapse */
+    }
+    .dropdown.is-expanded .dropdown-menu {
+      display: block;
+    }
+  }
+  /* — Dropdown (Mobile Accordion) & Hamburger Fix — */
+  
+  @media (max-width: 767px) {
+    
+    /* FIX 1: Ensure header stays above the mobile overlay */
+    .site-header {
+      z-index: 100; 
+    }
+    .nav-links a {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 700; /* Give them the same heavy weight */
+      text-transform: uppercase; /* Matches the Projects button */
+      color: var(--color-text);
+      padding-bottom: 0;
+      
+      /* THE FIX: Replaced 'justify-content: center' with 'flex-start' */
+      justify-content: flex-start;
+      
+      /* THE FIX: Added top padding to push links below the sticky header, 
+         and bottom padding so you can scroll past the last item */
+      padding: 8rem var(--space-4) 4rem var(--space-4);
+      
+      /* THE FIX: Allows the user to swipe/scroll when the accordion expands */
+      overflow-y: auto; 
+      
+      gap: var(--space-8);
+      background: var(--color-bg);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity    var(--duration-base) var(--ease-out),
+        visibility var(--duration-base) var(--ease-out);
+    }
+
+    /* FIX 2: Explicitly style the Hamburger 'X' animation */
+    .menu-toggle[aria-expanded="true"] .hamburger-bar:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+      background: var(--color-primary); /* Makes the X neon orange so it's obvious */
+    }
+    .menu-toggle[aria-expanded="true"] .hamburger-bar:nth-child(2) {
+      opacity: 0;
+    }
+    .menu-toggle[aria-expanded="true"] .hamburger-bar:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+      background: var(--color-primary);
+    }
+
+    /* Mobile Dropdown Overrides */
+    .dropdown {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .dropdown-menu {
+      position: static;
+      box-shadow: none;
+      border: none;
+      border-left: 2px solid var(--color-primary); /* Editorial left-border */
+      background: transparent;
+      margin-top: var(--space-2);
+      padding-left: var(--space-2);
+      min-width: 100%;
+      display: none; /* Hidden by default on mobile */
+      transform: none;
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    /* Triggered by JS below */
+    .dropdown.is-expanded .dropdown-menu {
+      display: block; 
+    }
+    .dropdown.is-expanded .dropdown-icon {
+      transform: rotate(180deg);
+      color: var(--color-primary);
+    }
+  }
+   
+   
+   /* 7. Mobile Nav Overlay
+      ---------------------------------------------------------- */
+   
+   @media (max-width: 767px) {
+     .nav-container, .container {
+       padding: 0 var(--space-4);
+     }
+   
+     .menu-toggle {
+       display: flex;
+     }
+   
+     .nav-links {
+       position: fixed;
+       inset: 0;
+       z-index: 99;
+       flex-direction: column;
+       align-items: center;
+       justify-content: center;
+       gap: var(--space-8);
+       background: var(--color-bg);
+       opacity: 0;
+       visibility: hidden;
+       pointer-events: none;
+       transition:
+         opacity    var(--duration-base) var(--ease-out),
+         visibility var(--duration-base) var(--ease-out);
+     }
+   
+     .nav-links.is-open {
+       opacity: 1;
+       visibility: visible;
+       pointer-events: auto;
+     }
+   
+     .nav-links a {
+       font-size: var(--text-xl);
+       font-family: var(--font-display);
+       color: var(--color-text);
+       padding-bottom: 0;
+     }
+   
+     .nav-links a::after {
+       display: none;
+     }
+   }
+   
+   
+   /* 8. Sections — shared rhythm
+      ---------------------------------------------------------- */
+   
+   section {
+     padding: var(--space-24) 0;
+     scroll-margin-top: var(--nav-height);
+   }
+   
+   /* 9. Hero (Phase 10: Infinite Marquee)
+      ---------------------------------------------------------- */
+   
+/* 9. Hero (12-Column Editorial Grid)
+      ---------------------------------------------------------- */
+   
+      #hero {
+        position: relative;
+        min-height: calc(100vh - var(--nav-height));
+        display: flex;
+        align-items: center; /* Centers the entire grid perfectly in the viewport */
+        background-color: var(--color-bg);
+        overflow: hidden;
+      }
+      
+      #hero .relative-z {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+      }
+   
+      /* — The Marquee (Anchored high, acting as texture) — */
+      .marquee-container {
+        position: absolute;
+        top: 1%; /* Tucked safely in the upper negative space */
+        left: 0;
+        width: 100vw;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.04;
+      }
+      
+      [data-theme="dark"] .marquee-container {
+        opacity: 0.08;
+      }
+      
+      .marquee-track { display: flex; width: max-content; animation: scrollMarquee 40s linear infinite; }
+      .marquee-content { display: flex; white-space: nowrap; }
+      
+      .marquee-content span {
+        font-family: var(--font-display);
+        font-size: clamp(4rem, 10vw, 8rem); 
+        font-weight: 700;
+        line-height: 1;
+        text-transform: uppercase;
+        padding-right: 2rem;
+        color: var(--color-text);
+      }
+      
+      @keyframes scrollMarquee {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+
+      
+      
+      /* — The 12-Column Layout — */
+      .hero-layout {
+        display: grid;
+        grid-template-columns: 1fr; /* Mobile: Stacks naturally */
+        gap: var(--space-8);
+        width: 100%;
+      }
+   
+      @media (min-width: 768px) {
+        .hero-layout {
+          grid-template-columns: repeat(12, 1fr); /* Divides container into 12 perfect slices */
+          align-items: center; /* Locks the left and right sides to the same vertical center */
+          gap: var(--space-6);
+        }
+        
+        .hero-main {
+          grid-column: 1 / 8; /* Spans columns 1 through 7 */
+        }
+        
+        .hero-meta {
+          grid-column: 8 / 13; /* Spans columns 8 through 12 */
+          border-left: 2px solid var(--color-border);
+          padding-left: var(--space-8); /* Deep padding for editorial feel */
+        }
+      }
+      
+      /* — Typography — */
+      #hero h1 {
+        font-family: var(--font-display);
+        font-size: clamp(3.5rem, 6.5vw, 6.5rem); 
+        line-height: 0.95; 
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        margin-bottom: var(--space-4);
+      }
+      
+      .hero-role {
+        font-family: var(--font-display);
+        font-size: var(--text-xl);
+        color: var(--color-primary);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0;
+      }
+      
+      .hero-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-6);
+      }
+   
+      .hero-meta p {
+        font-size: var(--text-md);
+        color: var(--color-text-muted);
+        line-height: var(--leading-relaxed);
+        margin-bottom: 0;
+      }
+   
+   
+   /* 10. Shared section heading rhythm
+      ---------------------------------------------------------- */
+   
+   h2 {
+     font-family: var(--font-display);
+     font-size: var(--text-2xl);
+     line-height: var(--leading-tight);
+     margin-bottom: var(--space-8);
+   }
+   
+   h3 {
+     font-size: var(--text-md);
+     font-weight: 600;
+     margin-bottom: var(--space-3);
+   }
+   
+   
+   /* 11. Buttons (Phase 10: Magnetic Interaction)
+      ---------------------------------------------------------- */
+   
+   .cta-button {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     gap: var(--space-2);
+     padding: var(--space-4) var(--space-8);
+     background-color: var(--color-primary);
+     color: var(--color-on-primary);
+     font-family: var(--font-display);
+     font-size: var(--text-md);
+     font-weight: 700;
+     text-transform: uppercase;
+     letter-spacing: 0.05em;
+     text-decoration: none;
+     border: none;
+     border-radius: 0;
+     cursor: pointer;
+     transform: translate(var(--tx, 0), var(--ty, 0));
+     transition:
+       background-color var(--duration-fast) var(--ease-out),
+       transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+   }
+   
+   .cta-button:hover {
+     background-color: var(--color-primary-hover);
+   }
+
+   /* ============================================================
+      11.5 Scroll Morph Transition ()
+      ============================================================ */
+   
+      .morph-svg {
+        position: absolute;
+        width: clamp(200px, 30vw, 400px);
+        height: auto;
+        transition: opacity 0.3s ease;
+      }
+      
+      #morph-chrome {
+        opacity: 0; /* Starts hidden */
+      }
+   
+   
+   /* 12. About (Phase 9 Brutalist Update)
+      ---------------------------------------------------------- */
+   
+   #about {
+     background-color: var(--color-surface);
+     border-top: 2px solid var(--color-text);
+   }
+   
+   #about h2 {
+     
+     text-transform: uppercase;
+     line-height: 0.9;
+     
+   }
+   
+   .about-layout {
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: var(--space-16);
+     align-items: center;
+   }
+   
+   .about-photo {
+     position: relative;
+     width: 80%;
+     aspect-ratio: 2 / 3; 
+     max-height: 60vh; /* Limits photo to 60% of the viewport height */
+     overflow: hidden;
+     border: 2px solid var(--color-text);
+     border-radius: 0;
+     box-shadow: 12px 12px 0 var(--color-primary);
+     transition: transform var(--duration-base) var(--ease-out);
+   }
+   
+   .about-photo:hover {
+     transform: translate(-4px, -4px);
+     box-shadow: 16px 16px 0 var(--color-primary);
+   }
+   
+   .about-photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* 🔴 CRITICAL FIX: Changed from 'contain' to 'cover' */
+    object-fit: cover; 
+    object-position: center top; /* Anchors the crop to your face/head */
+    
+    /* Keep your awesome hover effects intact */
+    filter: grayscale(100%) contrast(120%); 
+    transition: filter var(--duration-base) var(--ease-out);
+  }
+   
+   .about-photo:hover img {
+     filter: grayscale(0%) contrast(100%);
+   }
+   
+   .about-content p {
+     font-size: var(--text-md); 
+     color: var(--color-text);
+     line-height: var(--leading-relaxed);
+     max-width: 45ch;
+     margin-bottom: var(--space-8);
+   }
+   
+   .about-content h3 {
+     font-family: var(--font-display);
+     font-size: var(--text-xl);
+     text-transform: uppercase;
+     margin-bottom: var(--space-4);
+   }
+   
+   .skills-list {
+     display: flex;
+     flex-wrap: wrap;
+     gap: var(--space-3);
+     list-style: none;
+   }
+   
+   .skills-list li {
+     padding: var(--space-2) var(--space-4);
+     background-color: var(--color-bg);
+     border: 2px solid var(--color-text); 
+     border-radius: 0;
+     font-family: var(--font-display);
+     font-size: var(--text-sm);
+     font-weight: 700;
+     text-transform: uppercase;
+     letter-spacing: 0.05em;
+     color: var(--color-text);
+     transition: 
+       background-color var(--duration-fast) var(--ease-out), 
+       color var(--duration-fast) var(--ease-out),
+       transform var(--duration-fast) var(--ease-out);
+   }
+   
+   .skills-list li:hover {
+     background-color: var(--color-primary);
+     color: var(--color-on-primary);
+     border-color: var(--color-primary);
+     transform: translateY(-2px);
+   }
+   
+   
+   /* 13. Projects (Phase 9: Asymmetrical Bento Grid)
+      ---------------------------------------------------------- */
+   
+   #projects {
+     background-color: var(--color-bg);
+     text-transform: uppercase;
+   }
+   
+   .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* Reduced from 320px to 240px to keep the feature card above the fold */
+    grid-auto-rows: minmax(240px, auto); 
+    gap: var(--space-4);
+    list-style: none;
+  }
+   
+   .bento-card {
+     background-color: var(--color-surface);
+     border: 2px solid var(--color-text);
+     border-radius: 0px;
+     padding: var(--space-8);
+     display: flex;
+     flex-direction: column;
+     justify-content: flex-end;
+     position: relative;
+     overflow: hidden;
+     transition: transform var(--duration-fast) var(--ease-out), 
+                 box-shadow var(--duration-fast) var(--ease-out);
+   }
+   
+   .bento-card:hover {
+     transform: translate(-4px, -4px);
+     box-shadow: 12px 12px 0 var(--color-primary); 
+   }
+   
+  /* 1. Feature Card (Top Left) */
+  .bento-card:nth-child(1) {
+    grid-column: span 2;
+    grid-row: span 2;
+    background-color: var(--color-primary); /* Now using primary orange */
+    color: var(--color-on-primary);         /* Explicitly white text */
+  }
+   
+   .bento-card:nth-child(1) h3 { color: var(--color-bg); }
+   .bento-card:nth-child(1) p { 
+    color: rgba(255, 255, 255, 0.8); /* Force light-gray/white text */ }
+   
+   .bento-card:nth-child(4) {
+     grid-column: span 3;
+   }
+   
+   .bento-content {
+     position: relative;
+     z-index: 10;
+   }
+   
+   .bento-content h3 {
+     font-family: var(--font-display);
+     font-size: clamp(1.5rem, 3vw, 2.5rem);
+     line-height: var(--leading-tight);
+     text-transform: uppercase;
+     margin-bottom: var(--space-4);
+   }
+   
+   .bento-card:nth-child(1) h3 {
+    color: var(--color-on-primary); /* Force white */
+     font-size: clamp(2.5rem, 5vw, 4.5rem);
+   }
+   
+   .bento-content p {
+     color: var(--color-text-muted);
+     line-height: var(--leading-relaxed);
+     margin-bottom: var(--space-8);
+     max-width: 45ch;
+   }
+   
+   .bento-content a {
+     color: var(--color-primary);
+     font-size: var(--text-md);
+     font-weight: 700;
+     text-transform: uppercase;
+     letter-spacing: 0.05em;
+     text-decoration: none;
+   }
+   
+   .bento-content a:hover {
+     text-decoration: underline;
+   }
+
+   .bento-card:nth-child(1) .bento-content a {
+    color: var(--color-on-primary);
+    text-decoration: underline;
+  }
+   
+   /* — Phase 10: Parallax Image Layers — */
+   
+   .bento-image-layer {
+     position: absolute;
+     inset: 0;
+     z-index: 1;
+     overflow: hidden;
+     pointer-events: none;
+   }
+   
+   .bento-image-layer img {
+     position: absolute;
+     top: -15%;
+     left: 0;
+     width: 100%;
+     height: 130%;
+     object-fit: cover;
+     will-change: transform;
+   }
+   
+   .bento-overlay {
+     position: absolute;
+     inset: 0;
+     z-index: 5;
+     background: linear-gradient(to top, rgba(15,15,15, 0.9) 0%, rgba(15,15,15, 0.2) 100%);
+     pointer-events: none;
+   }
+   
+
+   /* ============================================================
+   Standalone Video Marquee Divider
+   ============================================================ */
+
+/* 1. Base Section */
+.standalone-marquee {
+  position: relative; 
+  width: 100%;
+  height: clamp(100px, 15vw, 200px); /* CRITICAL: Locks the total height of the section */
+  overflow: hidden;
+  isolation: isolate; 
+  background-color: var(--color-bg); 
+  border: none !important; 
+}
+
+/* 2. The Video Layer */
+.standalone-marquee .marquee-video-wrapper {
+  display: none; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; /* Forces the wrapper to match the exact locked height */
+  z-index: 1;
+}
+
+.standalone-marquee .marquee-video-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover !important; /* CRITICAL: Forces the video to crop itself to fill the space, killing letterboxing */
+  object-position: center; /* Keeps the middle of the video centered */
+  transform: scale(1.05); /* Secret trick: scales the video 5% larger to hide any microscopic edge bleeding */
+}
+
+/* 3. The Mask Layer */
+.standalone-marquee .marquee-mask {
+  position: absolute; /* Changed to absolute to lock it over the video perfectly */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; /* Matches the exact locked height */
+  z-index: 2; 
+  background-color: transparent; 
+  display: flex; /* Centers the text vertically inside the locked box */
+  align-items: center; 
+}
+
+/* 4. The Animation Engine */
+.standalone-marquee .marquee-track { 
+  display: flex; 
+  width: max-content; 
+  animation: scrollMarquee 40s linear infinite; 
+}
+
+.standalone-marquee .marquee-content { 
+  display: flex; 
+  white-space: nowrap; 
+}
+
+/* 5. Light Mode Typography (Divider Texture) */
+.standalone-marquee .marquee-content span {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 6rem); 
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  padding-right: 2rem;
+  color: var(--color-text); 
+  opacity: 0.15 !important; 
+}
+
+/* ──────────────────────────────────────────────────────────
+   DARK MODE OVERRIDES 
+   ────────────────────────────────────────────────────────── */
+
+[data-theme="dark"] .standalone-marquee .marquee-video-wrapper {
+  display: block; 
+}
+
+[data-theme="dark"] .standalone-marquee .marquee-mask {
+  background-color: #000; 
+  mix-blend-mode: multiply; 
+}
+
+[data-theme="dark"] .standalone-marquee .marquee-content span {
+  color: #fff; 
+  opacity: 1 !important; 
+  font-weight: 900; 
+}
+
+/* ──────────────────────────────────────────────────────────
+   KEYFRAMES 
+   ────────────────────────────────────────────────────────── */
+@keyframes scrollMarquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+   
+   
+   /* 14. Contact
+      ---------------------------------------------------------- */
+   /* 14. Contact (Phase 9/10: Split Grid Layout)
+      ---------------------------------------------------------- */
+   
+      #contact { 
+        background-color: var(--color-surface); 
+        padding-block: var(--space-24);
+        text-transform: uppercase;
+      }
+   
+      .contact-layout {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr; /* Links take 1 part, form 1.5 parts */
+        gap: var(--space-12);
+        margin-top: var(--space-8);
+      }
+   
+      .social-links {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+        margin-top: var(--space-6);
+      }
+   
+      .social-links a {
+        font-family: var(--font-display);
+        font-size: var(--text-lg);
+        font-weight: 700;
+        color: var(--color-text);
+        text-decoration: none;
+        border-bottom: 2px solid var(--color-border);
+        padding-bottom: var(--space-2);
+        display: block;
+        transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+      }
+   
+      .social-links a:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+      }
+   
+      /* Compact Form Styles */
+      .contact-form { 
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4); 
+      }
+      
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+      }
+      
+      .form-group label {
+        font-size: var(--text-sm);
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--color-text);
+      }
+      
+      .form-group input, 
+      .form-group textarea {
+        padding: var(--space-2);
+        background-color: var(--color-bg);
+        color: var(--color-text);
+        border: 2px solid var(--color-border); /* Thicker brutalist border */
+        border-radius: 0; /* Sharp edges */
+        font-size: var(--text-base);
+        transition: border-color var(--duration-fast) var(--ease-out);
+      }
+      
+      .form-group input:focus-visible, 
+      .form-group textarea:focus-visible {
+        border-color: var(--color-primary);
+        outline: none;
+      }
+      
+      .contact-form textarea {
+        resize: vertical;
+        min-height: 120px; /* Compact height */
+      }
+   
+     /* Mobile Responsive Adjustments for Contact */
+   @media (max-width: 767px) {
+    .contact-layout { 
+      grid-template-columns: 1fr; 
+      gap: var(--space-8);
+    }
+    
+    /* Move the form (index 2 in grid) to the top */
+    .contact-form {
+      order: 1;
+    }
+    
+    /* Move the links (index 1 in grid) to the bottom */
+    .contact-info {
+      order: 2;
+    }
+  }
+   
+   
+   /* 15. Footer
+      ---------------------------------------------------------- */
+   
+   .site-footer {
+     background-color: var(--color-bg);
+     border-top: 1px solid var(--color-border);
+     padding: var(--space-8) 0;
+   }
+   
+   .site-footer .container {
+     display: flex;
+     flex-wrap: wrap;
+     align-items: center;
+     justify-content: space-between;
+     gap: var(--space-4);
+   }
+   
+   .site-footer p,
+   .site-footer a {
+     font-size: var(--text-sm);
+     color: var(--color-text-muted);
+   }
+   
+   .site-footer a {
+     text-decoration: none;
+     transition: color var(--duration-fast) var(--ease-out);
+   }
+   
+   .site-footer a:hover {
+     color: var(--color-primary);
+   }
+   
+   
+   /* ============================================================
+      16. Scroll and animations
+      ============================================================ */
+   
+   @keyframes fadeSlideUp {
+     from { opacity: 0; transform: translateY(20px); }
+     to   { opacity: 1; transform: translateY(0); }
+   }
+   
+   .will-animate {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  /* We added the animation-delay directly to the universal class so ANY element can use stagger delays */
+  .will-animate.is-visible {
+    animation: fadeSlideUp var(--duration-slow) var(--ease-out) both;
+    animation-delay: var(--stagger-delay, 0ms); 
+  }
+   
+   
+   /* ============================================================
+      17. Responsive (Consolidated)
+      ============================================================ */
+   
+   /* 1024px: Tablets */
+   @media (max-width: 1024px) {
+     .bento-grid {
+       grid-template-columns: repeat(2, 1fr);
+     }
+     .bento-card:nth-child(4) {
+       grid-column: span 2;
+     }
+   }
+   
+   /* 767px: Large Phones & Small Tablets */
+   @media (max-width: 767px) {
+     section {
+       padding-block: var(--space-16);
+     }
+   
+     #hero {
+       min-height: 75vh;
+     }
+   
+     /* Bento Grid Mobile */
+     .bento-grid {
+       grid-template-columns: 1fr;
+     }
+     .bento-card:nth-child(1),
+     .bento-card:nth-child(4) {
+       grid-column: span 1;
+       grid-row: span 1;
+     }
+     .bento-card:hover {
+       box-shadow: 6px 6px 0 var(--color-primary);
+     }
+   
+     /* About Section Mobile */
+     .about-layout {
+       grid-template-columns: 1fr;
+       gap: var(--space-8);
+     }
+     .about-photo {
+       max-width: 100%;
+       box-shadow: 8px 8px 0 var(--color-primary);
+     }
+   }
+   
+   /* 639px: Small Phones */
+   @media (max-width: 639px) {
+     h2 {
+       font-size: var(--text-xl);
+     }
+   
+     .cta-button {
+       display: flex;
+       width: 100%;
+       min-height: 44px;
+       justify-content: center;
+     }
+   
+     .form-group input,
+     .form-group textarea {
+       min-height: 44px;
+       font-size: 1rem;
+     }
+   
+     .site-footer .container {
+       flex-direction: column;
+       align-items: center;
+       text-align: center;
+     }
+   }
+   
