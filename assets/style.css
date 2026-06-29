@@ -3,7 +3,6 @@
    Layer order: reset → tokens → base → layout → components
    ============================================================ */
 
-
 /* 1. Reset
    ---------------------------------------------------------- */
 
@@ -48,14 +47,10 @@
      --color-secondary:      #0F0F0F;
      --color-bg:             #EAEAEA;  /* Cool, stark light gray */
      --color-surface:        #FFFFFF;
+     --color-surface-glass:  rgba(255, 255, 255, 0.75);
      --color-text:           #050505;  /* Deepest black for max contrast */
      --color-text-muted:     #666666;
      --color-border:         #CCCCCC;
-
-     --color-bg:             #EAEAEA;  
-     --color-surface:        #FFFFFF;
-     --color-surface-glass:  rgba(255, 255, 255, 0.75); /* NEW: Light Mode Glass */
-     --color-text:           #050505;
    
      /* — Typography Overhaul — */
      --font-display: 'Space Grotesk', system-ui, sans-serif;
@@ -111,14 +106,10 @@
      --color-primary-hover:  #FF7340;
      --color-bg:             #0A0A0A; /* Near true black */
      --color-surface:        #141414;
+     --color-surface-glass:  rgba(20, 20, 20, 0.75);
      --color-text:           #F5F5F5;
      --color-text-muted:     #888888;
      --color-border:         #2A2A2A;
-
-     --color-bg:             #0A0A0A; 
-     --color-surface:        #141414;
-     --color-surface-glass:  rgba(20, 20, 20, 0.75); /* NEW: Dark Mode Glass */
-     --color-text:           #F5F5F5;
    }
    
    
@@ -143,9 +134,18 @@
    }
    
    .container {
-     max-width: var(--max-width);
+     width: 100%;
+     max-width: 1200px;
      margin: 0 auto;
-     padding: 0 var(--space-6);
+     /* CRITICAL: Enforces a strict 1.5rem (24px) mobile gutter */
+     padding: 0 1.5rem !important; 
+   }
+   
+   /* Bump up the breathing room on desktop */
+   @media (min-width: 768px) {
+     .container {
+       padding: 0 3rem !important; 
+     }
    }
    
    :focus-visible {
@@ -186,37 +186,33 @@
    }
    
    
-   /* 5. Site Header
+   /* 5. Site Header & Nav Container
       ---------------------------------------------------------- */
    
-      .site-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 100;
-        height: var(--nav-height);
-        
-        /* — The Glassmorphism Magic — */
-        background-color: var(--color-surface-glass);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px); /* Required for Safari */
-        
-        border-bottom: 1px solid transparent;
-        transition:
-          background-color var(--duration-base) var(--ease-in-out),
-          border-color var(--duration-fast) var(--ease-out),
-          box-shadow var(--duration-fast) var(--ease-out);
-      }
-      
-      .site-header.is-scrolled {
-        border-bottom: 0px solid var(--color-border);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05); /* Softer shadow for glass */
-      }
+   .site-header {
+     position: fixed;
+     top: 0;
+     left: 0;
+     right: 0;
+     z-index: 100;
+     height: var(--nav-height);
+     
+     /* — The Glassmorphism Magic — */
+     background-color: var(--color-surface-glass);
+     backdrop-filter: blur(8px);
+     -webkit-backdrop-filter: blur(8px); /* Required for Safari */
+     
+     border-bottom: 0px solid transparent;
+     transition:
+       background-color var(--duration-base) var(--ease-in-out),
+       border-color var(--duration-fast) var(--ease-out),
+       box-shadow var(--duration-fast) var(--ease-out);
+   }
    
-   
-   /* 6. Nav Container
-      ---------------------------------------------------------- */
+   .site-header.is-scrolled {
+     border-bottom: 0px solid var(--color-border);
+     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05); /* Softer shadow for glass */
+   }
    
    .nav-container {
      display: flex;
@@ -229,20 +225,6 @@
      padding: 0 var(--space-6);
    }
    
-   .nav-logo {
-     font-family: var(--font-display);
-     font-size: var(--text-md);
-     color: var(--color-text);
-     text-decoration: none;
-     letter-spacing: -0.01em;
-     flex-shrink: 0;
-     transition: color var(--duration-fast) var(--ease-out);
-   }
-   
-   .nav-logo:hover {
-     color: var(--color-primary);
-   }
-   
    .nav-links {
      display: flex;
      align-items: center;
@@ -251,16 +233,16 @@
    }
    
    .nav-links a {
-    position: relative;
-    font-family: var(--font-body); /* Force consistency with the button */
-    font-size: var(--text-base);
-    font-weight: 500;
-    color: var(--color-text-muted);
-    letter-spacing: 0.01em;
-    text-decoration: none;
-    padding-bottom: 2px;
-    transition: color var(--duration-fast) var(--ease-out);
-  }
+     position: relative;
+     font-family: var(--font-body);
+     font-size: var(--text-base);
+     font-weight: 500;
+     color: var(--color-text-muted);
+     letter-spacing: 0.01em;
+     text-decoration: none;
+     padding-bottom: 2px;
+     transition: color var(--duration-fast) var(--ease-out);
+   }
    
    .nav-links a::after {
      content: '';
@@ -287,13 +269,13 @@
    }
    
    .nav-controls {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    flex-shrink: 0;
-    position: relative; /* NEW: Establishes context */
-    z-index: 110;       /* NEW: Forces buttons above the mobile overlay */
-  }
+     display: flex;
+     align-items: center;
+     gap: var(--space-2);
+     flex-shrink: 0;
+     position: relative; 
+     z-index: 110;       
+   }
    
    .theme-toggle {
      display: flex;
@@ -365,215 +347,152 @@
    .menu-toggle[aria-expanded="true"] .hamburger-bar:nth-child(3) {
      transform: translateY(-7px) rotate(-45deg);
    }
-
-
-   /* — Dropdown Component (Desktop Hover) — */
-   
-  /* — Dropdown Component (Click-Based Editorial Style) — */
-   
-  .dropdown {
-    position: relative;
-  }
-  
-  .dropdown-toggle {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    background: none;
-    border: none;
-    color: var(--color-text-muted);
-    font-family: var(--font-body);
-    
-    /* FIX: Changed from --text-sm to --text-base to match the nav links exactly */
-    font-size: var(--text-base); 
-    
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    cursor: pointer;
-    padding: 0 0 2px 0;
-    transition: color var(--duration-fast) var(--ease-out);
-  }
-
-  .dropdown-toggle svg {
-    transition: transform var(--duration-fast) var(--ease-out);
-  }
-  
-  .dropdown-toggle:hover,
-  .dropdown.is-expanded .dropdown-toggle {
-    color: var(--color-text);
-  }
-
-  /* The Editorial Command Center Menu */
-  .dropdown-menu {
-    position: absolute;
-    top: calc(100% + var(--space-6));
-    left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    min-width: 320px; /* Wider, more magazine-like */
-    background-color: var(--color-bg);
-    border: 2px solid var(--color-text); /* Harsh border */
-    box-shadow: 12px 12px 0 var(--color-text); /* Monochromatic, heavy shadow */
-    list-style: none;
-    padding: var(--space-4);
-    opacity: 0;
-    visibility: hidden;
-    transition: all var(--duration-fast) var(--ease-out);
-    z-index: 101;
-  }
-  
-  /* Triggered ONLY by JavaScript class */
-  .dropdown.is-expanded .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-  }
-  
-  .dropdown.is-expanded .dropdown-toggle svg {
-    transform: rotate(180deg);
-  }
-  
-  /* Massive, Index-Style Typography */
-  .dropdown-menu a {
-    display: flex;
-    justify-content: space-between;
-    padding: var(--space-3) 0;
-    color: var(--color-text);
-    font-family: var(--font-display);
-    font-size: var(--text-md);
-    font-weight: 700;
-    text-transform: uppercase;
-    text-decoration: none;
-    border-bottom: 1px solid var(--color-border);
-    transition: color var(--duration-fast), padding-left var(--duration-fast);
-  }
-  
-  .dropdown-menu a:hover {
-    color: var(--color-primary);
-    padding-left: var(--space-2); /* Indents slightly on hover for physical feel */
-    border-bottom-color: var(--color-primary);
-  }
-  
-  .dropdown-menu a::after { display: none; } 
-  
-  .dropdown-menu .view-all {
-    border-bottom: none;
-    color: var(--color-primary);
-    margin-top: var(--space-2);
-  }
-
-  /* — Mobile Accordion Overrides — */
-  @media (max-width: 767px) {
-    .dropdown {
-      width: 100%;
-      align-items: center;
-    }
-    .dropdown-toggle {
-      font-size: var(--text-xl);
-      font-family: var(--font-display);
-      text-transform: uppercase;
-      color: var(--color-text);
-      justify-content: center;
-    }
-    .dropdown-menu {
-      position: static;
-      box-shadow: none;
-      border: none;
-      border-left: 2px solid var(--color-primary);
-      background: transparent;
-      margin-top: var(--space-4);
-      padding: 0 0 0 var(--space-4);
-      min-width: 100%;
-      transform: none;
-      display: none; /* Uses display:none for true accordion height collapse */
-    }
-    .dropdown.is-expanded .dropdown-menu {
-      display: block;
-    }
-  }
-  /* — Dropdown (Mobile Accordion) & Hamburger Fix — */
-  
-  @media (max-width: 767px) {
-    
-    /* FIX 1: Ensure header stays above the mobile overlay */
-    .site-header {
-      z-index: 100; 
-    }
-    .nav-links a {
-      font-family: var(--font-display);
-      font-size: var(--text-xl);
-      font-weight: 700; /* Give them the same heavy weight */
-      text-transform: uppercase; /* Matches the Projects button */
-      color: var(--color-text);
-      padding-bottom: 0;
-      
-      /* THE FIX: Replaced 'justify-content: center' with 'flex-start' */
-      justify-content: flex-start;
-      
-      /* THE FIX: Added top padding to push links below the sticky header, 
-         and bottom padding so you can scroll past the last item */
-      padding: 8rem var(--space-4) 4rem var(--space-4);
-      
-      /* THE FIX: Allows the user to swipe/scroll when the accordion expands */
-      overflow-y: auto; 
-      
-      gap: var(--space-8);
-      background: var(--color-bg);
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition:
-        opacity    var(--duration-base) var(--ease-out),
-        visibility var(--duration-base) var(--ease-out);
-    }
-
-    /* FIX 2: Explicitly style the Hamburger 'X' animation */
-    .menu-toggle[aria-expanded="true"] .hamburger-bar:nth-child(1) {
-      transform: translateY(7px) rotate(45deg);
-      background: var(--color-primary); /* Makes the X neon orange so it's obvious */
-    }
-    .menu-toggle[aria-expanded="true"] .hamburger-bar:nth-child(2) {
-      opacity: 0;
-    }
-    .menu-toggle[aria-expanded="true"] .hamburger-bar:nth-child(3) {
-      transform: translateY(-7px) rotate(-45deg);
-      background: var(--color-primary);
-    }
-
-    /* Mobile Dropdown Overrides */
-    .dropdown {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    
-    .dropdown-menu {
-      position: static;
-      box-shadow: none;
-      border: none;
-      border-left: 2px solid var(--color-primary); /* Editorial left-border */
-      background: transparent;
-      margin-top: var(--space-2);
-      padding-left: var(--space-2);
-      min-width: 100%;
-      display: none; /* Hidden by default on mobile */
-      transform: none;
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    /* Triggered by JS below */
-    .dropdown.is-expanded .dropdown-menu {
-      display: block; 
-    }
-    .dropdown.is-expanded .dropdown-icon {
-      transform: rotate(180deg);
-      color: var(--color-primary);
-    }
-  }
    
    
-   /* 7. Mobile Nav Overlay
+   /* 6. Nav Logo
+      ---------------------------------------------------------- */
+   
+   .nav-logo {
+     display: inline-flex;
+     align-items: center;
+     gap: 0.75rem;
+     color: var(--color-text);
+     text-decoration: none;
+     font-family: var(--font-display);
+     font-size: var(--text-md);
+     letter-spacing: -0.01em;
+     flex-shrink: 0;
+     transition: color var(--duration-fast) var(--ease-out);
+   }
+   
+   .nav-logo:hover {
+     color: var(--color-primary);
+   }
+   
+   .logo-image {
+     height: clamp(32px, 5vw, 48px); 
+     width: auto;
+     max-width: 100%;
+     object-fit: contain;
+     display: block;
+     transition: transform 0.3s ease;
+   }
+   
+   /* Hover Home Icon Magic */
+   .nav-logo::after {
+     content: '';
+     display: block;
+     width: 24px;
+     height: 24px;
+     background-color: currentColor; 
+     -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'%3E%3C/path%3E%3Cpolyline points='9 22 9 12 15 12 15 22'%3E%3C/polyline%3E%3C/svg%3E") no-repeat center / contain;
+     mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'%3E%3C/path%3E%3Cpolyline points='9 22 9 12 15 12 15 22'%3E%3C/polyline%3E%3C/svg%3E") no-repeat center / contain;
+     opacity: 0;
+     transform: translateX(-15px);
+     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   }
+   
+   .nav-logo:hover::after {
+     opacity: 1;
+     transform: translateX(0);
+   }
+   
+   .nav-logo:hover .logo-image {
+     transform: scale(1.05); 
+   }
+   
+   
+   /* 7. Dropdown Component (Desktop & Mobile)
+      ---------------------------------------------------------- */
+   
+   .dropdown {
+     position: relative;
+   }
+   
+   .dropdown-toggle {
+     display: flex;
+     align-items: center;
+     gap: var(--space-2);
+     background: none;
+     border: none;
+     color: var(--color-text-muted);
+     font-family: var(--font-body);
+     font-size: var(--text-base); 
+     font-weight: 500;
+     letter-spacing: 0.01em;
+     cursor: pointer;
+     padding: 0 0 2px 0;
+     transition: color var(--duration-fast) var(--ease-out);
+   }
+   
+   .dropdown-toggle svg {
+     transition: transform var(--duration-fast) var(--ease-out);
+   }
+   
+   .dropdown-toggle:hover,
+   .dropdown.is-expanded .dropdown-toggle {
+     color: var(--color-text);
+   }
+   
+   /* The Editorial Command Center Menu */
+   .dropdown-menu {
+     position: absolute;
+     top: calc(100% + var(--space-6));
+     left: 50%;
+     transform: translateX(-50%) translateY(10px);
+     min-width: 320px; 
+     background-color: var(--color-bg);
+     border: 2px solid var(--color-text); 
+     box-shadow: 12px 12px 0 var(--color-text); 
+     list-style: none;
+     padding: var(--space-4);
+     opacity: 0;
+     visibility: hidden;
+     transition: all var(--duration-fast) var(--ease-out);
+     z-index: 101;
+   }
+   
+   .dropdown.is-expanded .dropdown-menu {
+     opacity: 1;
+     visibility: visible;
+     transform: translateX(-50%) translateY(0);
+   }
+   
+   .dropdown.is-expanded .dropdown-toggle svg {
+     transform: rotate(180deg);
+   }
+   
+   /* Massive, Index-Style Typography */
+   .dropdown-menu a {
+     display: flex;
+     justify-content: space-between;
+     padding: var(--space-3) 0;
+     color: var(--color-text);
+     font-family: var(--font-display);
+     font-size: var(--text-md);
+     font-weight: 700;
+     text-transform: uppercase;
+     text-decoration: none;
+     border-bottom: 1px solid var(--color-border);
+     transition: color var(--duration-fast), padding-left var(--duration-fast);
+   }
+   
+   .dropdown-menu a:hover {
+     color: var(--color-primary);
+     padding-left: var(--space-2); 
+     border-bottom-color: var(--color-primary);
+   }
+   
+   .dropdown-menu a::after { display: none; } 
+   
+   .dropdown-menu .view-all {
+     border-bottom: none;
+     color: var(--color-primary);
+     margin-top: var(--space-2);
+   }
+   
+   
+   /* 8. Mobile Nav Overlay
       ---------------------------------------------------------- */
    
    @media (max-width: 767px) {
@@ -591,7 +510,9 @@
        z-index: 99;
        flex-direction: column;
        align-items: center;
-       justify-content: center;
+       justify-content: flex-start;
+       padding: 8rem var(--space-4) 4rem var(--space-4);
+       overflow-y: auto;
        gap: var(--space-8);
        background: var(--color-bg);
        opacity: 0;
@@ -611,6 +532,8 @@
      .nav-links a {
        font-size: var(--text-xl);
        font-family: var(--font-display);
+       font-weight: 700;
+       text-transform: uppercase;
        color: var(--color-text);
        padding-bottom: 0;
      }
@@ -618,136 +541,64 @@
      .nav-links a::after {
        display: none;
      }
+   
+     .site-header {
+       z-index: 100; 
+     }
+   
+     .menu-toggle[aria-expanded="true"] .hamburger-bar:nth-child(1),
+     .menu-toggle[aria-expanded="true"] .hamburger-bar:nth-child(3) {
+       background: var(--color-primary);
+     }
+   
+     /* Mobile Dropdown Overrides */
+     .dropdown {
+       width: 100%;
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+     }
+     
+     .dropdown-toggle {
+       font-size: var(--text-xl);
+       font-family: var(--font-display);
+       text-transform: uppercase;
+       color: var(--color-text);
+       justify-content: center;
+     }
+   
+     .dropdown-menu {
+       position: static;
+       box-shadow: none;
+       border: none;
+       border-left: 2px solid var(--color-primary);
+       background: transparent;
+       margin-top: var(--space-2);
+       padding: 0 0 0 var(--space-4);
+       min-width: 100%;
+       transform: none;
+       display: none; 
+       opacity: 1;
+       visibility: visible;
+     }
+     
+     .dropdown.is-expanded .dropdown-menu {
+       display: block; 
+     }
+   
+     .dropdown.is-expanded .dropdown-toggle svg {
+       color: var(--color-primary);
+     }
    }
    
    
-   /* 8. Sections — shared rhythm
+   /* 9. Layout Foundations (Sections & Headings)
       ---------------------------------------------------------- */
    
    section {
      padding: var(--space-24) 0;
      scroll-margin-top: var(--nav-height);
    }
-   
-   /* 9. Hero (Phase 10: Infinite Marquee)
-      ---------------------------------------------------------- */
-   
-/* 9. Hero (12-Column Editorial Grid)
-      ---------------------------------------------------------- */
-   
-      #hero {
-        position: relative;
-        min-height: calc(100vh - var(--nav-height));
-        display: flex;
-        align-items: center; /* Centers the entire grid perfectly in the viewport */
-        background-color: var(--color-bg);
-        overflow: hidden;
-      }
-      
-      #hero .relative-z {
-        position: relative;
-        z-index: 10;
-        width: 100%;
-      }
-   
-      /* — The Marquee (Anchored high, acting as texture) — */
-      .marquee-container {
-        position: absolute;
-        top: 1%; /* Tucked safely in the upper negative space */
-        left: 0;
-        width: 100vw;
-        z-index: 0;
-        pointer-events: none;
-        opacity: 0.04;
-      }
-      
-      [data-theme="dark"] .marquee-container {
-        opacity: 0.08;
-      }
-      
-      .marquee-track { display: flex; width: max-content; animation: scrollMarquee 40s linear infinite; }
-      .marquee-content { display: flex; white-space: nowrap; }
-      
-      .marquee-content span {
-        font-family: var(--font-display);
-        font-size: clamp(4rem, 10vw, 8rem); 
-        font-weight: 700;
-        line-height: 1;
-        text-transform: uppercase;
-        padding-right: 2rem;
-        color: var(--color-text);
-      }
-      
-      @keyframes scrollMarquee {
-        0%   { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
-      }
-
-      
-      
-      /* — The 12-Column Layout — */
-      .hero-layout {
-        display: grid;
-        grid-template-columns: 1fr; /* Mobile: Stacks naturally */
-        gap: var(--space-8);
-        width: 100%;
-      }
-   
-      @media (min-width: 768px) {
-        .hero-layout {
-          grid-template-columns: repeat(12, 1fr); /* Divides container into 12 perfect slices */
-          align-items: center; /* Locks the left and right sides to the same vertical center */
-          gap: var(--space-6);
-        }
-        
-        .hero-main {
-          grid-column: 1 / 8; /* Spans columns 1 through 7 */
-        }
-        
-        .hero-meta {
-          grid-column: 8 / 13; /* Spans columns 8 through 12 */
-          border-left: 2px solid var(--color-border);
-          padding-left: var(--space-8); /* Deep padding for editorial feel */
-        }
-      }
-      
-      /* — Typography — */
-      #hero h1 {
-        font-family: var(--font-display);
-        font-size: clamp(3.5rem, 6.5vw, 6.5rem); 
-        line-height: 0.95; 
-        text-transform: uppercase;
-        letter-spacing: -0.02em;
-        margin-bottom: var(--space-4);
-      }
-      
-      .hero-role {
-        font-family: var(--font-display);
-        font-size: var(--text-xl);
-        color: var(--color-primary);
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 0;
-      }
-      
-      .hero-meta {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--space-6);
-      }
-   
-      .hero-meta p {
-        font-size: var(--text-md);
-        color: var(--color-text-muted);
-        line-height: var(--leading-relaxed);
-        margin-bottom: 0;
-      }
-   
-   
-   /* 10. Shared section heading rhythm
-      ---------------------------------------------------------- */
    
    h2 {
      font-family: var(--font-display);
@@ -763,7 +614,7 @@
    }
    
    
-   /* 11. Buttons (Phase 10: Magnetic Interaction)
+   /* 10. Buttons & Interactive
       ---------------------------------------------------------- */
    
    .cta-button {
@@ -783,6 +634,7 @@
      border: none;
      border-radius: 0;
      cursor: pointer;
+     width: max-content !important; 
      transform: translate(var(--tx, 0), var(--ty, 0));
      transition:
        background-color var(--duration-fast) var(--ease-out),
@@ -792,36 +644,210 @@
    .cta-button:hover {
      background-color: var(--color-primary-hover);
    }
+   
+   .scroll-explore {
+     display: inline-flex;
+     flex-direction: column;
+     align-items: center;
+     gap: 0.5rem;
+     color: var(--color-text);
+     text-decoration: none;
+     text-transform: uppercase;
+     font-family: var(--font-display);
+     font-size: 0.75rem;
+     font-weight: 700;
+     letter-spacing: 0.05em;
+     opacity: 0.6;
+     transition: opacity 0.3s ease, color 0.3s ease;
+   }
+   
+   .scroll-explore:hover {
+     opacity: 1;
+     color: var(--color-primary);
+   }
+   
+   .scroll-explore svg {
+     animation: bounce 2s infinite;
+   }
+   
+   @keyframes bounce {
+     0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+     40% { transform: translateY(-8px); }
+     60% { transform: translateY(-4px); }
+   }
+   
+   
+   /* 11. Hero (12-Column Editorial Grid & Spatial Fixes)
+      ---------------------------------------------------------- */
+   
+   #hero {
+     position: relative;
+     min-height: calc(100vh - var(--nav-height));
+     display: flex;
+     flex-direction: column; /* Stacks elements vertically */
+     padding-bottom: var(--space-8) !important; /* Restores a healthy 2rem floor */
+     background-color: var(--color-bg);
+     overflow: hidden;
+   }
+   
+   #hero .relative-z {
+     position: relative;
+     z-index: 10;
+     width: 100%;
+   }
+   
+   /* Vertically center the main content automatically */
+   #hero .container.relative-z {
+     margin-top: auto;
+     margin-bottom: auto;
+   }
+   
+   /* — The Marquee Background — */
+   .marquee-container {
+     position: absolute;
+     top: 1%; /* Pulled down from 1% to close the awkward gap */
+     left: 0;
+     width: 100vw;
+     z-index: 0;
+     pointer-events: none;
+     opacity: 0.04;
+   }
+   
+   [data-theme="dark"] .marquee-container {
+     opacity: 0.08;
+   }
+   
+   .marquee-track { display: flex; width: max-content; animation: scrollMarquee 40s linear infinite; }
+   .marquee-content { display: flex; white-space: nowrap; }
+   
+   .marquee-content span {
+     font-family: var(--font-display);
+     font-size: clamp(4rem, 10vw, 8rem); 
+     font-weight: 700;
+     line-height: 1;
+     text-transform: uppercase;
+     padding-right: 2rem;
+     color: var(--color-text);
+   }
+   
+   /* — Hero Grid Layout — */
+   .hero-layout {
+     display: grid;
+     grid-template-columns: 1fr;
+     gap: var(--space-8);
+     width: 100%;
+   }
+   
+   @media (min-width: 768px) {
+     .hero-layout {
+       grid-template-columns: repeat(12, 1fr); 
+       align-items: center; 
+       gap: var(--space-6);
+     }
+     
+     .hero-main {
+       grid-column: 1 / 8; 
+     }
+     
+     .hero-meta {
+       grid-column: 8 / 13; 
+       border-left: 2px solid var(--color-border);
+       padding-left: var(--space-8); 
+     }
+   }
+   
+   /* — Hero Typography — */
+   #hero h1 {
+     font-family: var(--font-display);
+     font-size: clamp(3.5rem, 6.5vw, 6.5rem); 
+     line-height: 0.95; 
+     text-transform: uppercase;
+     letter-spacing: -0.02em;
+     margin-bottom: var(--space-4);
+   }
+   
+   .hero-role {
+     font-family: var(--font-display);
+     font-size: var(--text-xl);
+     color: var(--color-primary);
+     font-weight: 700;
+     text-transform: uppercase;
+     letter-spacing: 0.05em;
+     margin-bottom: 0;
+   }
+   
+   .hero-meta {
+     display: flex;
+     flex-direction: column;
+     align-items: flex-start;
+     gap: var(--space-6);
+   }
+   
+   .hero-meta p {
+     font-size: var(--text-md);
+     color: var(--color-text-muted);
+     line-height: var(--leading-relaxed);
+     margin-bottom: 0;
+   }
+   
+   /* — Scroll Indicator Pinning — */
+   .scroll-explore-wrapper {
+    position: relative; 
+    margin-top: var(--space-4); /* Gives a nice tight breathing room below the CTA */
+    display: inline-flex;
+    z-index: 20;
+  }
 
-   /* ============================================================
-      11.5 Scroll Morph Transition ()
-      ============================================================ */
+  .scroll-explore {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center; /* This centers the children horizontally */
+    text-align: center;   /* Ensures the text itself is centered */
+    gap: 0.75rem;
+    color: var(--color-text);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    opacity: 0.6;
+    transition: opacity 0.3s ease, color 0.3s ease;
+  }
    
-      .morph-svg {
-        position: absolute;
-        width: clamp(200px, 30vw, 400px);
-        height: auto;
-        transition: opacity 0.3s ease;
-      }
-      
-      #morph-chrome {
-        opacity: 0; /* Starts hidden */
-      }
+   
+   /* 12. Scroll Morph Transition
+      ---------------------------------------------------------- */
+   
+   /* Keep the morph section tight so the 192px gap doesn't return */
+   #scroll-morph-section {
+     padding-top: var(--space-4) !important;
+     padding-bottom: 0 !important;
+   }
+   
+   .morph-svg {
+     position: absolute;
+     width: clamp(200px, 30vw, 400px);
+     height: auto;
+     transition: opacity 0.3s ease;
+   }
+   
+   #morph-chrome {
+     opacity: 0;
+   }
    
    
-   /* 12. About (Phase 9 Brutalist Update)
+   /* 13. About Section (Brutalist Update)
       ---------------------------------------------------------- */
    
    #about {
      background-color: var(--color-surface);
-     border-top: 2px solid var(--color-text);
+    /* border-top: 2px solid var(--color-text);  <-- DELETE OR COMMENT OUT THIS LINE */
    }
    
    #about h2 {
-     
      text-transform: uppercase;
      line-height: 0.9;
-     
    }
    
    .about-layout {
@@ -835,7 +861,7 @@
      position: relative;
      width: 80%;
      aspect-ratio: 2 / 3; 
-     max-height: 60vh; /* Limits photo to 60% of the viewport height */
+     max-height: 60vh; 
      overflow: hidden;
      border: 2px solid var(--color-text);
      border-radius: 0;
@@ -849,19 +875,15 @@
    }
    
    .about-photo img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    
-    /* 🔴 CRITICAL FIX: Changed from 'contain' to 'cover' */
-    object-fit: cover; 
-    object-position: center top; /* Anchors the crop to your face/head */
-    
-    /* Keep your awesome hover effects intact */
-    filter: grayscale(100%) contrast(120%); 
-    transition: filter var(--duration-base) var(--ease-out);
-  }
+     position: absolute;
+     inset: 0;
+     width: 100%;
+     height: 100%;
+     object-fit: cover; 
+     object-position: center top; 
+     filter: grayscale(100%) contrast(120%); 
+     transition: filter var(--duration-base) var(--ease-out);
+   }
    
    .about-photo:hover img {
      filter: grayscale(0%) contrast(100%);
@@ -914,7 +936,7 @@
    }
    
    
-   /* 13. Projects (Phase 9: Asymmetrical Bento Grid)
+   /* 14. Projects (Asymmetrical Bento Grid)
       ---------------------------------------------------------- */
    
    #projects {
@@ -925,43 +947,46 @@
    .bento-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    /* Reduced from 320px to 240px to keep the feature card above the fold */
-    grid-auto-rows: minmax(240px, auto); 
+    grid-auto-rows: minmax(180px, auto); /* Drop this down to 180px */
     gap: var(--space-4);
     list-style: none;
   }
    
-   .bento-card {
-     background-color: var(--color-surface);
-     border: 2px solid var(--color-text);
-     border-radius: 0px;
-     padding: var(--space-8);
-     display: flex;
-     flex-direction: column;
-     justify-content: flex-end;
-     position: relative;
-     overflow: hidden;
-     transition: transform var(--duration-fast) var(--ease-out), 
-                 box-shadow var(--duration-fast) var(--ease-out);
-   }
+  .bento-card {
+    background-color: var(--color-surface);
+    border: 2px solid var(--color-text);
+    border-radius: 0px;
+    
+    /* CRITICAL: Reduce this from space-8 (32px) to space-6 (24px) */
+    padding: var(--space-6); 
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--duration-fast) var(--ease-out), 
+                box-shadow var(--duration-fast) var(--ease-out);
+  }
    
    .bento-card:hover {
      transform: translate(-4px, -4px);
      box-shadow: 12px 12px 0 var(--color-primary); 
    }
    
-  /* 1. Feature Card (Top Left) */
-  .bento-card:nth-child(1) {
+   /* Feature Card (Top Left) */
+   .bento-card:nth-child(1) {
     grid-column: span 2;
     grid-row: span 2;
-    background-color: var(--color-primary); /* Now using primary orange */
-    color: var(--color-on-primary);         /* Explicitly white text */
+    background-color: #1A1A1A; 
+    padding: 0; 
+    
+    color: var(--color-on-primary);         
   }
-   
-   .bento-card:nth-child(1) h3 { color: var(--color-bg); }
-   .bento-card:nth-child(1) p { 
-    color: rgba(255, 255, 255, 0.8); /* Force light-gray/white text */ }
-   
+  
+  .bento-card:nth-child(1) h3 { color: var(--color-bg); }
+  .bento-card:nth-child(1) p { color: rgba(255, 255, 255, 0.8); }
+
    .bento-card:nth-child(4) {
      grid-column: span 3;
    }
@@ -980,16 +1005,16 @@
    }
    
    .bento-card:nth-child(1) h3 {
-    color: var(--color-on-primary); /* Force white */
+     color: var(--color-on-primary); 
      font-size: clamp(2.5rem, 5vw, 4.5rem);
    }
    
    .bento-content p {
-     color: var(--color-text-muted);
-     line-height: var(--leading-relaxed);
-     margin-bottom: var(--space-8);
-     max-width: 45ch;
-   }
+    color: var(--color-text-muted);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-4); 
+    max-width: 45ch;
+  }
    
    .bento-content a {
      color: var(--color-primary);
@@ -1003,31 +1028,33 @@
    .bento-content a:hover {
      text-decoration: underline;
    }
-
+   
    .bento-card:nth-child(1) .bento-content a {
-    color: var(--color-on-primary);
-    text-decoration: underline;
+     color: var(--color-on-primary);
+     text-decoration: underline;
+   }
+   
+   /* Parallax Image Layers */
+  /* Parallax Image Layers (Fixed Containment) */
+  .bento-image-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden; /* CRITICAL: Acts as scissors, cutting off anything outside the grid box */
+    pointer-events: none;
+    border-radius: 0;
   }
-   
-   /* — Phase 10: Parallax Image Layers — */
-   
-   .bento-image-layer {
-     position: absolute;
-     inset: 0;
-     z-index: 1;
-     overflow: hidden;
-     pointer-events: none;
-   }
-   
-   .bento-image-layer img {
-     position: absolute;
-     top: -15%;
-     left: 0;
-     width: 100%;
-     height: 130%;
-     object-fit: cover;
-     will-change: transform;
-   }
+
+  .bento-image-layer img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; 
+    object-position: center; 
+    will-change: transform;
+  }
    
    .bento-overlay {
      position: absolute;
@@ -1036,212 +1063,187 @@
      background: linear-gradient(to top, rgba(15,15,15, 0.9) 0%, rgba(15,15,15, 0.2) 100%);
      pointer-events: none;
    }
-   
 
-   /* ============================================================
-   Standalone Video Marquee Divider
-   ============================================================ */
-
-/* 1. Base Section */
-.standalone-marquee {
-  position: relative; 
-  width: 100%;
-  height: clamp(100px, 15vw, 200px); /* CRITICAL: Locks the total height of the section */
-  overflow: hidden;
-  isolation: isolate; 
-  background-color: var(--color-bg); 
-  border: none !important; 
-}
-
-/* 2. The Video Layer */
-.standalone-marquee .marquee-video-wrapper {
-  display: none; 
+   /* Makes the entire bento card a clickable link */
+.card-hitbox {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%; /* Forces the wrapper to match the exact locked height */
-  z-index: 1;
-}
-
-.standalone-marquee .marquee-video-bg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover !important; /* CRITICAL: Forces the video to crop itself to fill the space, killing letterboxing */
-  object-position: center; /* Keeps the middle of the video centered */
-  transform: scale(1.05); /* Secret trick: scales the video 5% larger to hide any microscopic edge bleeding */
-}
-
-/* 3. The Mask Layer */
-.standalone-marquee .marquee-mask {
-  position: absolute; /* Changed to absolute to lock it over the video perfectly */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%; /* Matches the exact locked height */
-  z-index: 2; 
-  background-color: transparent; 
-  display: flex; /* Centers the text vertically inside the locked box */
-  align-items: center; 
-}
-
-/* 4. The Animation Engine */
-.standalone-marquee .marquee-track { 
-  display: flex; 
-  width: max-content; 
-  animation: scrollMarquee 40s linear infinite; 
-}
-
-.standalone-marquee .marquee-content { 
-  display: flex; 
-  white-space: nowrap; 
-}
-
-/* 5. Light Mode Typography (Divider Texture) */
-.standalone-marquee .marquee-content span {
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 8vw, 6rem); 
-  font-weight: 700;
-  line-height: 1;
-  text-transform: uppercase;
-  padding-right: 2rem;
-  color: var(--color-text); 
-  opacity: 0.15 !important; 
-}
-
-/* ──────────────────────────────────────────────────────────
-   DARK MODE OVERRIDES 
-   ────────────────────────────────────────────────────────── */
-
-[data-theme="dark"] .standalone-marquee .marquee-video-wrapper {
-  display: block; 
-}
-
-[data-theme="dark"] .standalone-marquee .marquee-mask {
-  background-color: #000; 
-  mix-blend-mode: multiply; 
-}
-
-[data-theme="dark"] .standalone-marquee .marquee-content span {
-  color: #fff; 
-  opacity: 1 !important; 
-  font-weight: 900; 
-}
-
-/* ──────────────────────────────────────────────────────────
-   KEYFRAMES 
-   ────────────────────────────────────────────────────────── */
-@keyframes scrollMarquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  inset: 0;
+  z-index: 20;
+  text-decoration: none;
 }
    
    
-   /* 14. Contact
-      ---------------------------------------------------------- */
-   /* 14. Contact (Phase 9/10: Split Grid Layout)
+   /* 15. Video Marquee Divider
       ---------------------------------------------------------- */
    
-      #contact { 
-        background-color: var(--color-surface); 
-        padding-block: var(--space-24);
-        text-transform: uppercase;
-      }
+   .standalone-marquee {
+     position: relative; 
+     width: 100%;
+     height: clamp(100px, 15vw, 200px); 
+     overflow: hidden;
+     isolation: isolate; 
+     background-color: var(--color-bg); 
+     border: none !important; 
+   }
    
-      .contact-layout {
-        display: grid;
-        grid-template-columns: 1fr 1.5fr; /* Links take 1 part, form 1.5 parts */
-        gap: var(--space-12);
-        margin-top: var(--space-8);
-      }
+   .standalone-marquee .marquee-video-wrapper {
+     display: none; 
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%; 
+     z-index: 1;
+   }
    
-      .social-links {
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-4);
-        margin-top: var(--space-6);
-      }
+   .standalone-marquee .marquee-video-bg {
+     width: 100%;
+     height: 100%;
+     object-fit: cover !important; 
+     object-position: center; 
+     transform: scale(1.05); 
+   }
    
-      .social-links a {
-        font-family: var(--font-display);
-        font-size: var(--text-lg);
-        font-weight: 700;
-        color: var(--color-text);
-        text-decoration: none;
-        border-bottom: 2px solid var(--color-border);
-        padding-bottom: var(--space-2);
-        display: block;
-        transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
-      }
+   .standalone-marquee .marquee-mask {
+     position: absolute; 
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%; 
+     z-index: 2; 
+     background-color: transparent; 
+     display: flex; 
+     align-items: center; 
+   }
    
-      .social-links a:hover {
-        border-color: var(--color-primary);
-        color: var(--color-primary);
-      }
+   .standalone-marquee .marquee-track { 
+     display: flex; 
+     width: max-content; 
+     animation: scrollMarquee 40s linear infinite; 
+   }
    
-      /* Compact Form Styles */
-      .contact-form { 
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-4); 
-      }
-      
-      .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-2);
-      }
-      
-      .form-group label {
-        font-size: var(--text-sm);
-        font-weight: 700;
-        text-transform: uppercase;
-        color: var(--color-text);
-      }
-      
-      .form-group input, 
-      .form-group textarea {
-        padding: var(--space-2);
-        background-color: var(--color-bg);
-        color: var(--color-text);
-        border: 2px solid var(--color-border); /* Thicker brutalist border */
-        border-radius: 0; /* Sharp edges */
-        font-size: var(--text-base);
-        transition: border-color var(--duration-fast) var(--ease-out);
-      }
-      
-      .form-group input:focus-visible, 
-      .form-group textarea:focus-visible {
-        border-color: var(--color-primary);
-        outline: none;
-      }
-      
-      .contact-form textarea {
-        resize: vertical;
-        min-height: 120px; /* Compact height */
-      }
+   .standalone-marquee .marquee-content { 
+     display: flex; 
+     white-space: nowrap; 
+   }
    
-     /* Mobile Responsive Adjustments for Contact */
-   @media (max-width: 767px) {
-    .contact-layout { 
-      grid-template-columns: 1fr; 
-      gap: var(--space-8);
-    }
-    
-    /* Move the form (index 2 in grid) to the top */
-    .contact-form {
-      order: 1;
-    }
-    
-    /* Move the links (index 1 in grid) to the bottom */
-    .contact-info {
-      order: 2;
-    }
-  }
+   .standalone-marquee .marquee-content span {
+     font-family: var(--font-display);
+     font-size: clamp(3rem, 8vw, 6rem); 
+     font-weight: 700;
+     line-height: 1;
+     text-transform: uppercase;
+     padding-right: 2rem;
+     color: var(--color-text); 
+     opacity: 0.15 !important; 
+   }
+   
+   /* Video Marquee Dark Mode */
+   [data-theme="dark"] .standalone-marquee .marquee-video-wrapper {
+     display: block; 
+   }
+   
+   [data-theme="dark"] .standalone-marquee .marquee-mask {
+     background-color: #000; 
+     mix-blend-mode: multiply; 
+   }
+   
+   [data-theme="dark"] .standalone-marquee .marquee-content span {
+     color: #fff; 
+     opacity: 1 !important; 
+     font-weight: 900; 
+   }
+   
+   @keyframes scrollMarquee {
+     0%   { transform: translateX(0); }
+     100% { transform: translateX(-50%); }
+   }
    
    
-   /* 15. Footer
+   /* 16. Contact (Split Grid Layout)
+      ---------------------------------------------------------- */
+   
+   #contact { 
+     background-color: var(--color-surface); 
+     padding-block: var(--space-24);
+     text-transform: uppercase;
+   }
+   
+   .contact-layout {
+     display: grid;
+     grid-template-columns: 1fr 1.5fr; 
+     gap: var(--space-12);
+     margin-top: var(--space-8);
+   }
+   
+   .social-links {
+     list-style: none;
+     display: flex;
+     flex-direction: column;
+     gap: var(--space-4);
+     margin-top: var(--space-6);
+   }
+   
+   .social-links a {
+     font-family: var(--font-display);
+     font-size: var(--text-lg);
+     font-weight: 700;
+     color: var(--color-text);
+     text-decoration: none;
+     border-bottom: 2px solid var(--color-border);
+     padding-bottom: var(--space-2);
+     display: block;
+     transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+   }
+   
+   .social-links a:hover {
+     border-color: var(--color-primary);
+     color: var(--color-primary);
+   }
+   
+   .contact-form { 
+     display: flex;
+     flex-direction: column;
+     gap: var(--space-4); 
+   }
+   
+   .form-group {
+     display: flex;
+     flex-direction: column;
+     gap: var(--space-2);
+   }
+   
+   .form-group label {
+     font-size: var(--text-sm);
+     font-weight: 700;
+     text-transform: uppercase;
+     color: var(--color-text);
+   }
+   
+   .form-group input, 
+   .form-group textarea {
+     padding: var(--space-2);
+     background-color: var(--color-bg);
+     color: var(--color-text);
+     border: 2px solid var(--color-border); 
+     border-radius: 0; 
+     font-size: var(--text-base);
+     transition: border-color var(--duration-fast) var(--ease-out);
+   }
+   
+   .form-group input:focus-visible, 
+   .form-group textarea:focus-visible {
+     border-color: var(--color-primary);
+     outline: none;
+   }
+   
+   .contact-form textarea {
+     resize: vertical;
+     min-height: 120px; 
+   }
+   
+   
+   /* 17. Footer
       ---------------------------------------------------------- */
    
    .site-footer {
@@ -1274,9 +1276,8 @@
    }
    
    
-   /* ============================================================
-      16. Scroll and animations
-      ============================================================ */
+   /* 18. Scroll and animations
+      ---------------------------------------------------------- */
    
    @keyframes fadeSlideUp {
      from { opacity: 0; transform: translateY(20px); }
@@ -1284,19 +1285,18 @@
    }
    
    .will-animate {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  
-  /* We added the animation-delay directly to the universal class so ANY element can use stagger delays */
-  .will-animate.is-visible {
-    animation: fadeSlideUp var(--duration-slow) var(--ease-out) both;
-    animation-delay: var(--stagger-delay, 0ms); 
-  }
+     opacity: 0;
+     transform: translateY(20px);
+   }
+   
+   .will-animate.is-visible {
+     animation: fadeSlideUp var(--duration-slow) var(--ease-out) both;
+     animation-delay: var(--stagger-delay, 0ms); 
+   }
    
    
    /* ============================================================
-      17. Responsive (Consolidated)
+      19. Responsive Overrides (Consolidated)
       ============================================================ */
    
    /* 1024px: Tablets */
@@ -1309,7 +1309,35 @@
      }
    }
    
-   /* 767px: Large Phones & Small Tablets */
+   /* 768px: Small Tablets / Large Mobile Layouts */
+   @media (max-width: 768px) {
+     .cta-button {
+       padding: 0.875rem 2rem;
+       font-size: 1rem;
+     }
+   
+     .about-layout {
+       grid-template-columns: 1fr;
+       gap: var(--space-12);
+     }
+   
+     .about-content {
+       order: -1; 
+       text-align: left; 
+     }
+   
+     .about-photo {
+       max-width: 320px; 
+       width: 100%;
+       aspect-ratio: 4 / 5;
+       height: auto;
+       max-height: none; 
+       margin: 0; 
+       box-shadow: 8px 8px 0 var(--color-primary); 
+     }
+   }
+   
+   /* 767px: Mobile Structural Overrides */
    @media (max-width: 767px) {
      section {
        padding-block: var(--space-16);
@@ -1323,11 +1351,13 @@
      .bento-grid {
        grid-template-columns: 1fr;
      }
+     
      .bento-card:nth-child(1),
      .bento-card:nth-child(4) {
        grid-column: span 1;
        grid-row: span 1;
      }
+     
      .bento-card:hover {
        box-shadow: 6px 6px 0 var(--color-primary);
      }
@@ -1337,9 +1367,24 @@
        grid-template-columns: 1fr;
        gap: var(--space-8);
      }
+     
      .about-photo {
        max-width: 100%;
        box-shadow: 8px 8px 0 var(--color-primary);
+     }
+   
+     /* Contact Section Mobile */
+     .contact-layout { 
+       grid-template-columns: 1fr; 
+       gap: var(--space-8);
+     }
+     
+     .contact-form {
+       order: 1;
+     }
+     
+     .contact-info {
+       order: 2;
      }
    }
    
@@ -1368,4 +1413,3 @@
        text-align: center;
      }
    }
-   

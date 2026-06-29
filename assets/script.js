@@ -3,42 +3,12 @@
    ============================================================ */
 
    'use strict';
-/* ── Phase 4.5: Mobile Dropdown Accordion ───────────────────── */
-/* ── Phase 4.5: Unified Click-Based Dropdown ────────────────── */
-(function () {
-  const dropdown = document.querySelector('.dropdown');
-  const toggleBtn = dropdown?.querySelector('.dropdown-toggle');
-  
-  if (!dropdown || !toggleBtn) return;
-  
-  // 1. Toggle on click
-  toggleBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    const isExpanded = dropdown.classList.toggle('is-expanded');
-    toggleBtn.setAttribute('aria-expanded', isExpanded);
-  });
 
-  // 2. The UX Gold Standard: Close when clicking outside
-  document.addEventListener('click', function(e) {
-    // If the click happened outside the dropdown element, close it
-    if (!dropdown.contains(e.target) && dropdown.classList.contains('is-expanded')) {
-      dropdown.classList.remove('is-expanded');
-      toggleBtn.setAttribute('aria-expanded', 'false');
-    }
-  });
-
-  // 3. Close when pressing the "Escape" key
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && dropdown.classList.contains('is-expanded')) {
-      dropdown.classList.remove('is-expanded');
-      toggleBtn.setAttribute('aria-expanded', 'false');
-      toggleBtn.focus(); // Return focus to the button for accessibility
-    }
-  });
-})();
-
-   /* ── Phase 4: Dark / light toggle ─────────────────────────── */
+   /* ============================================================
+      1. Global Utilities & Foundation
+      ============================================================ */
    
+   // 1.1 Theme Toggle (Dark / Light)
    (function () {
      const toggle = document.querySelector('.theme-toggle');
      if (!toggle) return;
@@ -67,9 +37,34 @@
      });
    })();
    
+   // 1.2 Dynamic Nav Height Measurement
+   (function () {
+     const header = document.querySelector('.site-header');
+     if (!header) return;
    
-   /* ── Phase 4: Hamburger menu ───────────────────────────────── */
+     function setNavHeight() {
+       document.documentElement.style.setProperty(
+         '--nav-height',
+         header.offsetHeight + 'px'
+       );
+     }
    
+     setNavHeight();
+     window.addEventListener('resize', setNavHeight);
+   })();
+   
+   // 1.3 Dynamic Footer Year
+   (function () {
+     const yearEl = document.getElementById('footer-year');
+     if (yearEl) yearEl.textContent = new Date().getFullYear();
+   })();
+   
+   
+   /* ============================================================
+      2. Navigation & Menus
+      ============================================================ */
+   
+   // 2.1 Hamburger Menu (Mobile Navigation)
    (function () {
      const menuToggle = document.querySelector('.menu-toggle');
      const navLinks   = document.getElementById('nav-menu');
@@ -142,9 +137,36 @@
      });
    })();
    
+   // 2.2 Click-Based Dropdown (Projects Menu)
+   (function () {
+     const dropdown = document.querySelector('.dropdown');
+     const toggleBtn = dropdown?.querySelector('.dropdown-toggle');
+     
+     if (!dropdown || !toggleBtn) return;
+     
+     toggleBtn.addEventListener('click', function(e) {
+       e.preventDefault();
+       const isExpanded = dropdown.classList.toggle('is-expanded');
+       toggleBtn.setAttribute('aria-expanded', isExpanded);
+     });
    
-   /* ── Phase 4: Scroll shadow ────────────────────────────────── */
+     document.addEventListener('click', function(e) {
+       if (!dropdown.contains(e.target) && dropdown.classList.contains('is-expanded')) {
+         dropdown.classList.remove('is-expanded');
+         toggleBtn.setAttribute('aria-expanded', 'false');
+       }
+     });
    
+     document.addEventListener('keydown', function(e) {
+       if (e.key === 'Escape' && dropdown.classList.contains('is-expanded')) {
+         dropdown.classList.remove('is-expanded');
+         toggleBtn.setAttribute('aria-expanded', 'false');
+         toggleBtn.focus(); 
+       }
+     });
+   })();
+   
+   // 2.3 Scroll Shadow on Header
    (function () {
      const header = document.querySelector('.site-header');
      const hero   = document.getElementById('hero');
@@ -161,34 +183,11 @@
    })();
    
    
-   /* ── Footer year ───────────────────────────────────────────── */
+   /* ============================================================
+      3. Intersection Observers
+      ============================================================ */
    
-   (function () {
-     const yearEl = document.getElementById('footer-year');
-     if (yearEl) yearEl.textContent = new Date().getFullYear();
-   })();
-   
-   
-   /* ── Phase 6: Nav height measurement ──────────────────────────── */
-   
-   (function () {
-     const header = document.querySelector('.site-header');
-     if (!header) return;
-   
-     function setNavHeight() {
-       document.documentElement.style.setProperty(
-         '--nav-height',
-         header.offsetHeight + 'px'
-       );
-     }
-   
-     setNavHeight();
-     window.addEventListener('resize', setNavHeight);
-   })();
-   
-   
-   /* ── Phase 6: IntersectionObserver — active nav link ──────────── */
-   
+   // 3.1 Active Nav Link Observer
    (function () {
      const sections = document.querySelectorAll('main section[id]');
      const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
@@ -198,13 +197,16 @@
        function (entries) {
          entries.forEach(function (entry) {
            if (!entry.isIntersecting) return;
+           
            navLinks.forEach(function (link) {
-             link.classList.remove('active');
+             // CRITICAL FIX: Changed from 'active' to 'is-active' to match CSS
+             link.classList.remove('is-active');
            });
+           
            const match = document.querySelector(
              '.nav-links a[href="#' + entry.target.id + '"]'
            );
-           if (match) match.classList.add('active');
+           if (match) match.classList.add('is-active');
          });
        },
        { rootMargin: '-10% 0px -75% 0px', threshold: 0 }
@@ -215,9 +217,7 @@
      });
    })();
    
-   
-   /* ── Phase 6: IntersectionObserver — entrance animations ──────── */
-   
+   // 3.2 Entrance Animations
    (function () {
      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
      if (!('IntersectionObserver' in window)) return;
@@ -226,9 +226,10 @@
        card.style.setProperty('--stagger-delay', (i * 120) + 'ms');
      });
    
+     // CRITICAL FIX: Updated target selectors to match HTML structure
      const targets = document.querySelectorAll(
-      'section:not(#hero) h2, .about-photo, .about-content, .bento-card, #contact > .container > p, .contact-form'
-    );
+      'section:not(#hero) h2, .about-photo, .about-content, .bento-card, .contact-info, .contact-form'
+     );
    
      const animationObserver = new IntersectionObserver(
        function (entries) {
@@ -248,11 +249,14 @@
        }
        animationObserver.observe(el);
      });
-   })(); // <-- Phase 6 properly closes here now.
+   })();
    
    
-   /* ── Phase 10: Magnetic CTA Buttons ───────────────────────────── */
+   /* ============================================================
+      4. Micro-Interactions
+      ============================================================ */
    
+   // 4.1 Magnetic CTA Buttons
    (function () {
      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
    
@@ -283,13 +287,18 @@
    })();
    
    
-   /* ── Phase 10: Parallax Image Reveals ─────────────────────────── */
+   /* ============================================================
+      5. Scroll Effects (Parallax & GSAP)
+      ============================================================ */
    
+   // 5.1 Optimized Parallax Image Reveals
    (function () {
      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
    
      const parallaxImages = document.querySelectorAll('.bento-image-layer img');
      if (!parallaxImages.length) return;
+   
+     let ticking = false;
    
      function renderParallax() {
        parallaxImages.forEach(function (img) {
@@ -306,33 +315,51 @@
            img.style.transform = 'translateY(' + yPos + '%)';
          }
        });
-   
-       requestAnimationFrame(renderParallax);
+       
+       ticking = false; // Reset lock after frame executes
      }
    
-     requestAnimationFrame(renderParallax);
+     // CRITICAL FIX: Attached to scroll event instead of infinitely looping requestAnimationFrame
+     window.addEventListener('scroll', function() {
+       if (!ticking) {
+         window.requestAnimationFrame(renderParallax);
+         ticking = true;
+       }
+     }, { passive: true });
+   
+     // Initial call on load
+     renderParallax();
    })();
-   /* ── Phase 11: GSAP Morph Transition ────────────────────────── */
-gsap.registerPlugin(ScrollTrigger);
-
-const tl = gsap.timeline({
-  scrollTrigger: {
-    trigger: "#scroll-morph-section",
-    start: "top top",
-    end: "bottom bottom",
-    scrub: 1, // This is the 'buttery' inertia setting
-    pin: true,
-    anticipatePin: 1
-  }
-});
-
-// Define the two shapes (You get the 'd' paths from Figma/Illustrator)
-const wireframePath = "M50,10 A40,40 0 1,0 50,90 A40,40 0 1,0 50,10 Z";
-const chromePath = "M50,20 L80,50 L50,80 L20,50 Z"; // Example: morphing to a diamond
-
-tl.to("#morph-path", {
-  duration: 1,
-  attr: { d: chromePath }, // Automatically morphs path A to path B
-  rotation: 360,          // Spins it while morphing
-  ease: "power2.inOut"    // Gen-Z style acceleration
-});
+   
+   // 5.2 GSAP Morph Transition
+   (function () {
+     // Ensure GSAP exists before trying to register it
+     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+   
+     gsap.registerPlugin(ScrollTrigger);
+   
+     const morphSection = document.getElementById('scroll-morph-section');
+     const morphPath = document.getElementById('morph-path');
+     
+     if (!morphSection || !morphPath) return;
+   
+     const tl = gsap.timeline({
+       scrollTrigger: {
+         trigger: "#scroll-morph-section",
+         start: "top top",
+         end: "bottom bottom",
+         scrub: 1, 
+         pin: true,
+         anticipatePin: 1
+       }
+     });
+   
+     const chromePath = "M50,20 L80,50 L50,80 L20,50 Z"; 
+   
+     tl.to("#morph-path", {
+       duration: 1,
+       attr: { d: chromePath }, 
+       rotation: 360,          
+       ease: "power2.inOut"    
+     });
+   })();
